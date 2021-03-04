@@ -15,6 +15,7 @@ class MainActivity : AppCompatActivity() {
 
         detailsButton.setOnClickListener {
             val intent = Intent(this, MovieDetailsActivity::class.java)
+            startActivity(intent)
         }
     }
 
