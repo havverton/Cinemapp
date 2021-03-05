@@ -1,24 +1,37 @@
 package com.havverton.cinemapp
 
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
+import androidx.appcompat.app.AppCompatActivity
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), FragmentMoviesList.ClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        var movieslistFragment: FragmentMoviesList? = null
 
+        if (savedInstanceState == null) {
+            movieslistFragment = FragmentMoviesList()
 
-        val detailsButton = findViewById<Button>(R.id.toDetailsBtn)
-
-        detailsButton.setOnClickListener {
-            val intent = Intent(this, MovieDetailsActivity::class.java)
-            startActivity(intent)
+            supportFragmentManager.beginTransaction().apply {
+                add(R.id.main_frame, movieslistFragment!!, "OLOLO")
+                commit()
+            }
+        } else {
+            movieslistFragment =
+                supportFragmentManager.findFragmentByTag("OLOLO") as? FragmentMoviesList
         }
+
+
     }
 
+    override fun openMovieDetails() {
+        val moviesDetailFragment = FragmentMovieDetails()
+        supportFragmentManager.beginTransaction().apply {
+            replace(R.id.main_frame, moviesDetailFragment, "OLOLO1")
+            addToBackStack(null)
+            commit()
+        }
+    }
 
 
 }

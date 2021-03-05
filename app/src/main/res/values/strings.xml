@@ -7,7 +7,7 @@
         actions and restore balance to the universe.</string>
     <string name="cast">Cast</string>
     <string name="pegi">13+</string>
-    <string name="FilmName">Avengers: \nEnd Game</string>
+    <string name="FilmName">Avengers: End Game</string>
     <string name="Genre">Action, Adventure, Fantasy</string>
     <string name="reviews">125 REVIEWS</string>
     <string name="actor1">Robert Downey Jr.</string>
@@ -15,4 +15,7 @@
     <string name="actor3">Mark  Ruffalo</string>
     <string name="actor4">Chris Hemsworth</string>
     <string name="back">Back</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="movies_list">Movies list</string>
 </resources>
