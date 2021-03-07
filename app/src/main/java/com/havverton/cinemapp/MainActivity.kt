@@ -3,7 +3,7 @@ package com.havverton.cinemapp
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 
-class MainActivity : AppCompatActivity(), FragmentMoviesList.ClickListener {
+class MainActivity : AppCompatActivity(), MovieListAdapter.ClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -32,6 +32,5 @@ class MainActivity : AppCompatActivity(), FragmentMoviesList.ClickListener {
             commit()
         }
     }
-
 
 }

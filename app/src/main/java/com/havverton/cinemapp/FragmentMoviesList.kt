@@ -1,16 +1,26 @@
 package com.havverton.cinemapp
 
 import android.content.Context
+import android.content.res.Resources
+import android.media.Image
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Adapter
+import android.widget.GridLayout
 import android.widget.ImageView
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 class FragmentMoviesList : Fragment() {
-    var clickListener: ClickListener? = null
+    var clickListener: MovieListAdapter.ClickListener? = null
     private var movieBlock: ImageView? = null
+    private var recyclerView: RecyclerView? = null
+    private var adapter: MovieListAdapter? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -24,15 +34,33 @@ class FragmentMoviesList : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+        val posterBW = AppCompatResources.getDrawable(view.context,R.drawable.blackwidow)
+
+        val filmList:List<Film> = listOf(
+            Film("BlackWidow","Pizdec","125 review","137 min", posterBW!!),
+            Film("Avengers","Pizdec","125 review","137 min", posterBW),
+            Film("Avengers2","Pizdec","125 review","137 min", posterBW),
+            Film("Avengers3","Pizdec","125 review","137 min", posterBW),
+            Film("BlackWidow","Pizdec","125 review","137 min", posterBW!!),
+            Film("Avengers4","Pizdec","125 review","137 min", posterBW),
+            Film("Avengers5","Pizdec","125 review","137 min", posterBW),
+            Film("Avengers6","Pizdec","125 review","137 min", posterBW)
+        )
+        recyclerView = view.findViewById<RecyclerView>(R.id.rv_list)
+        recyclerView?.layoutManager = GridLayoutManager(context,2)
+        adapter = MovieListAdapter(filmList)
+
+        recyclerView?.adapter = adapter
         super.onViewCreated(view, savedInstanceState)
-        movieBlock = view.findViewById<ImageView>(R.id.moviesListBlock).apply {
-            setOnClickListener { clickListener?.openMovieDetails() }
-        }
+
+
+
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is ClickListener) {
+        if (context is MovieListAdapter.ClickListener) {
             clickListener = context
         }
 
@@ -43,13 +71,5 @@ class FragmentMoviesList : Fragment() {
         clickListener = null
     }
 
-    fun openMovie() {
-
-    }
-
-
-    interface ClickListener {
-        fun openMovieDetails()
-    }
 
 }
