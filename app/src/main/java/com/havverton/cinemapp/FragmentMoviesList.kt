@@ -38,14 +38,14 @@ class FragmentMoviesList : Fragment() {
         val posterBW = AppCompatResources.getDrawable(view.context,R.drawable.blackwidow)
 
         val filmList:List<Film> = listOf(
-            Film("BlackWidow","Pizdec","125 review","137 min", posterBW!!),
-            Film("Avengers","Pizdec","125 review","137 min", posterBW),
-            Film("Avengers2","Pizdec","125 review","137 min", posterBW),
-            Film("Avengers3","Pizdec","125 review","137 min", posterBW),
-            Film("BlackWidow","Pizdec","125 review","137 min", posterBW!!),
-            Film("Avengers4","Pizdec","125 review","137 min", posterBW),
-            Film("Avengers5","Pizdec","125 review","137 min", posterBW),
-            Film("Avengers6","Pizdec","125 review","137 min", posterBW)
+            Film("BlackWidow","Action","125 review","137 min", posterBW!!),
+            Film("Avengers","Action","125 review","137 min", posterBW),
+            Film("Avengers2","Action","125 review","137 min", posterBW),
+            Film("Avengers3","Action","125 review","137 min", posterBW),
+            Film("BlackWidow","Action","125 review","137 min", posterBW),
+            Film("Avengers4","Action","125 review","137 min", posterBW),
+            Film("Avengers5","Action","125 review","137 min", posterBW),
+            Film("Avengers6","Action","125 review","137 min", posterBW)
         )
         recyclerView = view.findViewById<RecyclerView>(R.id.rv_list)
         recyclerView?.layoutManager = GridLayoutManager(context,2)
