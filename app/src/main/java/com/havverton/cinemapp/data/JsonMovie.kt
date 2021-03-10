@@ -1,4 +1,4 @@
-package com.android.academy.fundamentals.homework.data
+package com.havverton.cinemapp.data
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

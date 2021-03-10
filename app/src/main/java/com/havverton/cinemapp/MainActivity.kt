@@ -2,6 +2,7 @@ package com.havverton.cinemapp
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.android.academy.fundamentals.homework.model.Movie
 import com.havverton.cinemapp.adapters.MovieListAdapter
 import com.havverton.cinemapp.fragments.FragmentMovieDetails
 import com.havverton.cinemapp.fragments.FragmentMoviesList
@@ -26,13 +27,14 @@ class MainActivity : AppCompatActivity(), MovieListAdapter.ClickListener {
         }
     }
 
-    override fun openMovieDetails() {
+    override fun openMovieDetails(movie:Movie) {
         val moviesDetailFragment =
-            FragmentMovieDetails()
+            FragmentMovieDetails(movie)
         supportFragmentManager.beginTransaction().apply {
             replace(R.id.main_frame, moviesDetailFragment, "OLOLO1")
             addToBackStack(null)
             commit()
         }
     }
+
 }

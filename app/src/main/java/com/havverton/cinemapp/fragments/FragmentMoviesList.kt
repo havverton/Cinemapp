@@ -6,13 +6,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.android.academy.fundamentals.homework.model.Movie
 import com.havverton.cinemapp.Film
 import com.havverton.cinemapp.R
 import com.havverton.cinemapp.adapters.MovieListAdapter
+import com.havverton.cinemapp.data.JsonMovieRepository
+import com.havverton.cinemapp.data.MovieRepository
+import kotlinx.coroutines.*
 
 class FragmentMoviesList : Fragment() {
     var clickListener: MovieListAdapter.ClickListener? = null
@@ -28,81 +33,28 @@ class FragmentMoviesList : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         return inflater.inflate(R.layout.fragment_movies_list, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        var filmList: List<Movie> = emptyList()
+        val scope = CoroutineScope(Dispatchers.IO + Job())
+        val test = scope.async {
+            JsonMovieRepository(view.context).loadMovies()
+        }
 
-        val posterBW = AppCompatResources.getDrawable(view.context,
-            R.drawable.blackwidow
-        )
 
-        val filmList:List<Film> = listOf(
-            Film(
-                "BlackWidow",
-                "Action",
-                "125 review",
-                "137 min",
-                posterBW!!
-            ),
-            Film(
-                "Avengers",
-                "Action",
-                "125 review",
-                "137 min",
-                posterBW
-            ),
-            Film(
-                "Avengers2",
-                "Action",
-                "125 review",
-                "137 min",
-                posterBW
-            ),
-            Film(
-                "Avengers3",
-                "Action",
-                "125 review",
-                "137 min",
-                posterBW
-            ),
-            Film(
-                "BlackWidow",
-                "Action",
-                "125 review",
-                "137 min",
-                posterBW
-            ),
-            Film(
-                "Avengers4",
-                "Action",
-                "125 review",
-                "137 min",
-                posterBW
-            ),
-            Film(
-                "Avengers5",
-                "Action",
-                "125 review",
-                "137 min",
-                posterBW
-            ),
-            Film(
-                "Avengers6",
-                "Action",
-                "125 review",
-                "137 min",
-                posterBW
-            )
-        )
         recyclerView = view.findViewById<RecyclerView>(R.id.rv_list)
-        recyclerView?.layoutManager = GridLayoutManager(context,2)
-        adapter = MovieListAdapter(filmList)
+        recyclerView?.layoutManager = GridLayoutManager(context, 2)
+        scope.launch {
+            adapter = MovieListAdapter(test.await())
+            val scope1 = CoroutineScope(Dispatchers.Main + Job())
+            scope1.launch {
+                recyclerView?.adapter = adapter
+            }
 
-        recyclerView?.adapter = adapter
-        super.onViewCreated(view, savedInstanceState)
-
-
+        }
 
     }
 
@@ -119,5 +71,8 @@ class FragmentMoviesList : Fragment() {
         clickListener = null
     }
 
+    interface UpdateFragment {
+        fun updateFragment()
+    }
 
 }

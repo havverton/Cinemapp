@@ -6,10 +6,12 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.android.academy.fundamentals.homework.model.Movie
+import com.bumptech.glide.Glide
 import com.havverton.cinemapp.Film
 import com.havverton.cinemapp.R
 
-class MovieListAdapter(filmList:List<Film>):RecyclerView.Adapter<MovieListAdapter.MovieListViewHolder>() {
+class MovieListAdapter(filmList:List<Movie>):RecyclerView.Adapter<MovieListAdapter.MovieListViewHolder>() {
     val filmList = filmList
     private var listener: ClickListener? = null
 
@@ -25,9 +27,9 @@ class MovieListAdapter(filmList:List<Film>):RecyclerView.Adapter<MovieListAdapte
             listener = context
         }
 
-        view.setOnClickListener {
-          listener?.openMovieDetails()
-        }
+       /* view.setOnClickListener {
+          listener?.openMovieDetails(filmList[])
+        }*/
         return vh
     }
 
@@ -36,11 +38,17 @@ class MovieListAdapter(filmList:List<Film>):RecyclerView.Adapter<MovieListAdapte
     }
 
     override fun onBindViewHolder(holder: MovieListViewHolder, position: Int) {
-       holder.filmName.text = filmList[position].name
-        holder.reviews.text = filmList[position].reviews
-        holder.genre.text = filmList[position].genre
-        holder.duration.text = filmList[position].duration
-        holder.filmPoster.setImageDrawable(filmList[position].poster)
+       holder.filmName.text = filmList[position].title
+        holder.reviews.text = filmList[position].reviewCount.toString()
+        holder.genre.text = filmList[position].genres[0].name
+        holder.duration.text = filmList[position].runningTime.toString()
+        Glide
+            .with(holder.itemView)
+            .load(filmList[position].imageUrl)
+            .into(holder.filmPoster)
+        holder.itemView.setOnClickListener{
+            listener?.openMovieDetails(filmList[position])
+        }
     }
 
 
@@ -54,7 +62,7 @@ class MovieListAdapter(filmList:List<Film>):RecyclerView.Adapter<MovieListAdapte
         }
 
     interface ClickListener{
-        fun openMovieDetails()
+        fun openMovieDetails(movie: Movie)
     }
 
 }

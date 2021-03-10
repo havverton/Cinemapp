@@ -11,20 +11,25 @@
         android:id="@+id/moviesListBlock"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="0dp"
         android:src="@drawable/moviebg"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
 
     <ImageView
         android:id="@+id/filmPoster"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
+        android:layout_width="0dp"
+        android:layout_height="246dp"
+        android:layout_marginBottom="50dp"
         android:src="@drawable/moviepic"
-        app:layout_constraintStart_toStartOf="@+id/listMask"
-        app:layout_constraintTop_toTopOf="@+id/listMask" />
+        app:layout_constraintBottom_toBottomOf="@+id/moviesListBlock"
+        app:layout_constraintEnd_toEndOf="@+id/moviesListBlock"
+        app:layout_constraintHorizontal_bias="0.84"
+        app:layout_constraintStart_toStartOf="@id/moviesListBlock"
+        app:layout_constraintTop_toTopOf="@id/moviesListBlock" />
 
     <ImageView
         android:id="@+id/listMask"
@@ -32,23 +37,23 @@
         android:layout_height="0dp"
         android:src="@drawable/moviemask"
         app:layout_constraintBottom_toBottomOf="@id/filmPoster"
-        app:layout_constraintEnd_toEndOf="@+id/moviesListBlock"
+        app:layout_constraintEnd_toEndOf="@id/filmPoster"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/moviesListBlock"
-        app:layout_constraintTop_toTopOf="@+id/moviesListBlock"
+        app:layout_constraintStart_toStartOf="@id/filmPoster"
+        app:layout_constraintTop_toTopOf="@id/filmPoster"
         app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/filmGenre"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginBottom="22dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginBottom="68dp"
         android:text="@string/Genre"
         android:textColor="@color/genre"
         android:textSize="8sp"
-        app:layout_constraintBottom_toBottomOf="@+id/filmPoster"
-        app:layout_constraintStart_toStartOf="@+id/filmPoster" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@id/moviesListBlock" />
 
     <ImageView
         android:id="@+id/imageView18"
@@ -98,14 +103,15 @@
     <TextView
         android:id="@+id/filmReviews"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="6dp"
+        android:layout_height="0dp"
         android:layout_marginTop="2dp"
+        android:layout_marginBottom="10dp"
         android:text="@string/reviews"
         android:textColor="@color/review"
         android:textSize="8sp"
-        app:layout_constraintStart_toEndOf="@+id/imageView22"
-        app:layout_constraintTop_toBottomOf="@+id/filmGenre" />
+        app:layout_constraintBottom_toBottomOf="@+id/filmPoster"
+        app:layout_constraintTop_toBottomOf="@+id/filmGenre"
+        tools:layout_editor_absoluteX="58dp" />
 
     <TextView
         android:id="@+id/filmName"
@@ -125,11 +131,12 @@
 
     <TextView
         android:id="@+id/filmDuration"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="137 MIN"
         android:textColor="@color/review"
         android:textSize="8sp"
+        app:layout_constraintBottom_toBottomOf="@+id/moviesListBlock"
         app:layout_constraintStart_toStartOf="@+id/filmName"
         app:layout_constraintTop_toBottomOf="@+id/filmName" />
 
@@ -139,7 +146,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="13dp"
         android:layout_marginEnd="6dp"
-        app:layout_constraintEnd_toEndOf="@+id/filmPoster"
+        app:layout_constraintEnd_toEndOf="@id/moviesListBlock"
         app:layout_constraintTop_toTopOf="@+id/moviesListBlock"
         app:srcCompat="@drawable/like" />
 
@@ -149,8 +156,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="6dp"
         android:layout_marginTop="8dp"
-        app:layout_constraintStart_toStartOf="@+id/filmPoster"
-        app:layout_constraintTop_toTopOf="@+id/moviesListBlock"
+        app:layout_constraintStart_toStartOf="@id/moviesListBlock"
+        app:layout_constraintTop_toTopOf="@id/moviesListBlock"
         app:srcCompat="@drawable/listrating" />
 
     <TextView

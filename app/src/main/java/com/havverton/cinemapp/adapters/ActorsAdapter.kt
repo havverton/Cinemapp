@@ -6,7 +6,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.havverton.cinemapp.Actor
+import com.android.academy.fundamentals.homework.model.Actor
+import com.bumptech.glide.Glide
 import com.havverton.cinemapp.R
 
 class ActorsAdapter(actors: List<Actor>) : RecyclerView.Adapter<ActorViewHolder>() {
@@ -23,7 +24,10 @@ class ActorsAdapter(actors: List<Actor>) : RecyclerView.Adapter<ActorViewHolder>
 
     override fun onBindViewHolder(holder: ActorViewHolder, position: Int) {
         holder.name.text = actors[position].name
-        holder.pic.setImageDrawable(actors[position].pic)
+        Glide
+            .with(holder.itemView.context)
+            .load(actors[position].imageUrl)
+            .into(holder.pic)
     }
 }
 
