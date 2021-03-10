@@ -1,20 +1,18 @@
-package com.havverton.cinemapp
+package com.havverton.cinemapp.fragments
 
 import android.content.Context
-import android.content.res.Resources
-import android.media.Image
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Adapter
-import android.widget.GridLayout
 import android.widget.ImageView
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.havverton.cinemapp.Film
+import com.havverton.cinemapp.R
+import com.havverton.cinemapp.adapters.MovieListAdapter
 
 class FragmentMoviesList : Fragment() {
     var clickListener: MovieListAdapter.ClickListener? = null
@@ -35,17 +33,67 @@ class FragmentMoviesList : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        val posterBW = AppCompatResources.getDrawable(view.context,R.drawable.blackwidow)
+        val posterBW = AppCompatResources.getDrawable(view.context,
+            R.drawable.blackwidow
+        )
 
         val filmList:List<Film> = listOf(
-            Film("BlackWidow","Action","125 review","137 min", posterBW!!),
-            Film("Avengers","Action","125 review","137 min", posterBW),
-            Film("Avengers2","Action","125 review","137 min", posterBW),
-            Film("Avengers3","Action","125 review","137 min", posterBW),
-            Film("BlackWidow","Action","125 review","137 min", posterBW),
-            Film("Avengers4","Action","125 review","137 min", posterBW),
-            Film("Avengers5","Action","125 review","137 min", posterBW),
-            Film("Avengers6","Action","125 review","137 min", posterBW)
+            Film(
+                "BlackWidow",
+                "Action",
+                "125 review",
+                "137 min",
+                posterBW!!
+            ),
+            Film(
+                "Avengers",
+                "Action",
+                "125 review",
+                "137 min",
+                posterBW
+            ),
+            Film(
+                "Avengers2",
+                "Action",
+                "125 review",
+                "137 min",
+                posterBW
+            ),
+            Film(
+                "Avengers3",
+                "Action",
+                "125 review",
+                "137 min",
+                posterBW
+            ),
+            Film(
+                "BlackWidow",
+                "Action",
+                "125 review",
+                "137 min",
+                posterBW
+            ),
+            Film(
+                "Avengers4",
+                "Action",
+                "125 review",
+                "137 min",
+                posterBW
+            ),
+            Film(
+                "Avengers5",
+                "Action",
+                "125 review",
+                "137 min",
+                posterBW
+            ),
+            Film(
+                "Avengers6",
+                "Action",
+                "125 review",
+                "137 min",
+                posterBW
+            )
         )
         recyclerView = view.findViewById<RecyclerView>(R.id.rv_list)
         recyclerView?.layoutManager = GridLayoutManager(context,2)

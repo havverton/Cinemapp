@@ -1,7 +1,6 @@
-package com.havverton.cinemapp
+package com.havverton.cinemapp.fragments
 
 import android.os.Bundle
-import android.util.LayoutDirection
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,11 +8,14 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.havverton.cinemapp.Actor
+import com.havverton.cinemapp.R
+import com.havverton.cinemapp.adapters.ActorsAdapter
 
 
 class FragmentMovieDetails : Fragment() {
     var recyclerView:RecyclerView? = null
-    var adapter:ActorsAdapter? = null
+    var adapter: ActorsAdapter? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -27,7 +29,9 @@ class FragmentMovieDetails : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val actPic = AppCompatResources.getDrawable(view.context,R.drawable.stark)
+        val actPic = AppCompatResources.getDrawable(view.context,
+            R.drawable.stark
+        )
         val actors:List<Actor> = listOf(
             Actor("Robert Downey Jr.", actPic!!),
             Actor("Robert Downey Jr.", actPic),

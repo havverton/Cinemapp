@@ -1,4 +1,4 @@
-package com.havverton.cinemapp
+package com.havverton.cinemapp.adapters
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,6 +6,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.havverton.cinemapp.Actor
+import com.havverton.cinemapp.R
 
 class ActorsAdapter(actors: List<Actor>) : RecyclerView.Adapter<ActorViewHolder>() {
     val actors = actors
@@ -26,6 +28,6 @@ class ActorsAdapter(actors: List<Actor>) : RecyclerView.Adapter<ActorViewHolder>
 }
 
 class ActorViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    val name: TextView = itemView.findViewById<TextView>(R.id.actorName)
-    val pic: ImageView = itemView.findViewById<ImageView>(R.id.actorPic)
+    val name: TextView = itemView.findViewById(R.id.actorName)
+    val pic: ImageView = itemView.findViewById(R.id.actorPic)
 }

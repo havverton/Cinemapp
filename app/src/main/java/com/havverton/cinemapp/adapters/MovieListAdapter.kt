@@ -1,12 +1,13 @@
-package com.havverton.cinemapp
+package com.havverton.cinemapp.adapters
 
 import android.view.LayoutInflater
-import android.view.TextureView
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.havverton.cinemapp.Film
+import com.havverton.cinemapp.R
 
 class MovieListAdapter(filmList:List<Film>):RecyclerView.Adapter<MovieListAdapter.MovieListViewHolder>() {
     val filmList = filmList
@@ -15,7 +16,10 @@ class MovieListAdapter(filmList:List<Film>):RecyclerView.Adapter<MovieListAdapte
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieListViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.view_holder_movie,parent,false)
-        val vh = MovieListViewHolder(view)
+        val vh =
+            MovieListViewHolder(
+                view
+            )
         val context = view.context
         if(context is ClickListener){
             listener = context
