@@ -81,7 +81,7 @@ internal class JsonMovieRepository(private val context: Context) : MovieReposito
                 detailImageUrl = jsonMovie.backdropPicture,
                 rating = (jsonMovie.ratings / 2).toInt(),
                 reviewCount = jsonMovie.votesCount,
-                pgAge = if (jsonMovie.adult) 16 else 13,
+                pgAge = if (jsonMovie.adult) 16 else 14,
                 runningTime = jsonMovie.runtime,
                 genres = jsonMovie.genreIds.map { id ->
                     genresMap[id].orThrow { IllegalArgumentException("Genre not found") }

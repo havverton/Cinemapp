@@ -6,9 +6,9 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.android.academy.fundamentals.homework.model.Genre
 import com.android.academy.fundamentals.homework.model.Movie
 import com.bumptech.glide.Glide
-import com.havverton.cinemapp.Film
 import com.havverton.cinemapp.R
 
 class MovieListAdapter(filmList:List<Movie>):RecyclerView.Adapter<MovieListAdapter.MovieListViewHolder>() {
@@ -27,9 +27,7 @@ class MovieListAdapter(filmList:List<Movie>):RecyclerView.Adapter<MovieListAdapt
             listener = context
         }
 
-       /* view.setOnClickListener {
-          listener?.openMovieDetails(filmList[])
-        }*/
+
         return vh
     }
 
@@ -39,16 +37,32 @@ class MovieListAdapter(filmList:List<Movie>):RecyclerView.Adapter<MovieListAdapt
 
     override fun onBindViewHolder(holder: MovieListViewHolder, position: Int) {
        holder.filmName.text = filmList[position].title
-        holder.reviews.text = filmList[position].reviewCount.toString()
-        holder.genre.text = filmList[position].genres[0].name
-        holder.duration.text = filmList[position].runningTime.toString()
+        holder.reviews.text = "${ filmList[position].reviewCount} Reviews"
+        holder.ageRating.text = "${filmList[position].pgAge}+"
+
+        holder.genre.text = fillGenres(filmList[position].genres)
+        holder.duration.text = "${filmList[position].runningTime} MINS"
         Glide
             .with(holder.itemView)
             .load(filmList[position].imageUrl)
             .into(holder.filmPoster)
+
+
         holder.itemView.setOnClickListener{
             listener?.openMovieDetails(filmList[position])
         }
+    }
+
+    fun fillGenres(genres:List<Genre>):String{
+        var genreString = ""
+        val iterator = genres.iterator()
+        do {
+            genreString +=iterator.next().name
+            if(iterator.hasNext()) {
+                genreString += ", "
+            }
+        } while(iterator.hasNext())
+        return genreString
     }
 
 
@@ -58,8 +72,9 @@ class MovieListAdapter(filmList:List<Movie>):RecyclerView.Adapter<MovieListAdapt
         val genre:TextView = itemView.findViewById(R.id.filmGenre)
         val duration:TextView = itemView.findViewById(R.id.filmDuration)
         val filmPoster: ImageView = itemView.findViewById(R.id.filmPoster)
-        val movieListBlock:ImageView = itemView.findViewById(R.id.moviesListBlock)
+        val ageRating: TextView = itemView.findViewById(R.id.pgAge)
         }
+
 
     interface ClickListener{
         fun openMovieDetails(movie: Movie)

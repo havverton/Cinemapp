@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.android.academy.fundamentals.homework.model.Actor
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.havverton.cinemapp.R
 
 class ActorsAdapter(actors: List<Actor>) : RecyclerView.Adapter<ActorViewHolder>() {
@@ -27,6 +28,8 @@ class ActorsAdapter(actors: List<Actor>) : RecyclerView.Adapter<ActorViewHolder>
         Glide
             .with(holder.itemView.context)
             .load(actors[position].imageUrl)
+            .apply(RequestOptions().override(80, 80))
+            .apply(RequestOptions().centerCrop())
             .into(holder.pic)
     }
 }

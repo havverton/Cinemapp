@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_margin="5dp"
+    android:layout_margin="20dp"
     android:layout_marginBottom="10dp">
 
     <ImageView
@@ -14,10 +14,10 @@
         android:src="@drawable/moviebg"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <ImageView
         android:id="@+id/filmPoster"
@@ -45,15 +45,19 @@
 
     <TextView
         android:id="@+id/filmGenre"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
-        android:layout_marginBottom="68dp"
+        android:layout_marginTop="210dp"
+        android:layout_marginBottom="75dp"
         android:text="@string/Genre"
         android:textColor="@color/genre"
         android:textSize="8sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@id/moviesListBlock" />
+        app:layout_constraintBottom_toBottomOf="@+id/moviesListBlock"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@id/moviesListBlock"
+        app:layout_constraintTop_toTopOf="@+id/moviesListBlock" />
 
     <ImageView
         android:id="@+id/imageView18"
@@ -102,16 +106,19 @@
 
     <TextView
         android:id="@+id/filmReviews"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="2dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="6dp"
         android:text="@string/reviews"
         android:textColor="@color/review"
         android:textSize="8sp"
         app:layout_constraintBottom_toBottomOf="@+id/filmPoster"
-        app:layout_constraintTop_toBottomOf="@+id/filmGenre"
-        tools:layout_editor_absoluteX="58dp" />
+        app:layout_constraintEnd_toEndOf="@+id/moviesListBlock"
+        app:layout_constraintStart_toEndOf="@+id/imageView22"
+        app:layout_constraintTop_toBottomOf="@+id/filmGenre" />
 
     <TextView
         android:id="@+id/filmName"
@@ -132,7 +139,7 @@
     <TextView
         android:id="@+id/filmDuration"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="11dp"
         android:text="137 MIN"
         android:textColor="@color/review"
         android:textSize="8sp"
@@ -152,23 +159,31 @@
 
     <ImageView
         android:id="@+id/imageView15"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="6dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="120dp"
+        app:layout_constraintBottom_toBottomOf="@+id/likeIcon"
+        app:layout_constraintEnd_toStartOf="@+id/likeIcon"
         app:layout_constraintStart_toStartOf="@id/moviesListBlock"
         app:layout_constraintTop_toTopOf="@id/moviesListBlock"
         app:srcCompat="@drawable/listrating" />
 
     <TextView
-        android:id="@+id/textView14"
+        android:id="@+id/pgAge"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:text="@string/_13"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="2dp"
         android:textColor="@color/white"
+        android:textSize="10sp"
         app:layout_constraintBottom_toBottomOf="@+id/imageView15"
         app:layout_constraintEnd_toEndOf="@+id/imageView15"
         app:layout_constraintStart_toStartOf="@+id/imageView15"
-        app:layout_constraintTop_toTopOf="@+id/imageView15" />
+        app:layout_constraintTop_toTopOf="@+id/imageView15"
+        tools:text="@string/_13"
+        tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
