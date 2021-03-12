@@ -5,30 +5,32 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.findViewTreeViewModelStoreOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.android.academy.fundamentals.homework.model.Genre
 import com.android.academy.fundamentals.homework.model.Movie
 import com.bumptech.glide.Glide
+import com.havverton.cinemapp.DetailsViewModel
+import com.havverton.cinemapp.DetailsViewModelFactory
 import com.havverton.cinemapp.R
 
-class MovieListAdapter(filmList:List<Movie>):RecyclerView.Adapter<MovieListAdapter.MovieListViewHolder>() {
-    val filmList = filmList
-    private var listener: ClickListener? = null
-
-
+class MovieListAdapter:RecyclerView.Adapter<MovieListAdapter.MovieListViewHolder>() {
+    var filmList : List<Movie> = emptyList()
+    private var listener: ItemSelectedListener? = null
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieListViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.view_holder_movie,parent,false)
-        val vh =
-            MovieListViewHolder(
-                view
-            )
+        val vh = MovieListViewHolder(view)
         val context = view.context
-        if(context is ClickListener){
+        if(context is ItemSelectedListener){
             listener = context
         }
-
-
         return vh
+    }
+
+    fun setList(list: List<Movie>){
+        filmList = list
+        notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int {
@@ -36,24 +38,29 @@ class MovieListAdapter(filmList:List<Movie>):RecyclerView.Adapter<MovieListAdapt
     }
 
     override fun onBindViewHolder(holder: MovieListViewHolder, position: Int) {
-       holder.filmName.text = filmList[position].title
-        holder.reviews.text = "${ filmList[position].reviewCount} Reviews"
-        holder.ageRating.text = "${filmList[position].pgAge}+"
+        val currentMovie = filmList[position]
+        fillFields(holder,currentMovie)
 
-        holder.genre.text = fillGenres(filmList[position].genres)
-        holder.duration.text = "${filmList[position].runningTime} MINS"
+    }
+
+    private fun fillFields(holder: MovieListViewHolder, movie:Movie){
+        holder.filmName.text = movie.title
+        holder.reviews.text = "${ movie.reviewCount} Reviews"
+        holder.ageRating.text = "${movie.pgAge}+"
+        holder.genre.text = fillGenres(movie.genres)
+        holder.duration.text = "${movie.runningTime} MINS"
+
         Glide
             .with(holder.itemView)
-            .load(filmList[position].imageUrl)
+            .load(movie.imageUrl)
             .into(holder.filmPoster)
 
-
         holder.itemView.setOnClickListener{
-            listener?.openMovieDetails(filmList[position])
+            listener?.openMovieDetails(movie)
         }
     }
 
-    fun fillGenres(genres:List<Genre>):String{
+    private fun fillGenres(genres:List<Genre>):String{
         var genreString = ""
         val iterator = genres.iterator()
         do {
@@ -65,7 +72,6 @@ class MovieListAdapter(filmList:List<Movie>):RecyclerView.Adapter<MovieListAdapt
         return genreString
     }
 
-
     class MovieListViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         val filmName:TextView = itemView.findViewById(R.id.filmName)
         val reviews:TextView = itemView.findViewById(R.id.filmReviews)
@@ -76,8 +82,8 @@ class MovieListAdapter(filmList:List<Movie>):RecyclerView.Adapter<MovieListAdapt
         }
 
 
-    interface ClickListener{
-        fun openMovieDetails(movie: Movie)
+    interface ItemSelectedListener{
+        fun openMovieDetails(item:Movie)
     }
 
 }

@@ -11,16 +11,20 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.havverton.cinemapp.R
 
-class ActorsAdapter(actors: List<Actor>) : RecyclerView.Adapter<ActorViewHolder>() {
-    val actors = actors
+class ActorsAdapter() : RecyclerView.Adapter<ActorViewHolder>() {
+    var actors : List<Actor> = emptyList()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ActorViewHolder {
-        val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.view_holder_actor, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.view_holder_actor, parent, false)
         return ActorViewHolder(view)
     }
 
     override fun getItemCount(): Int {
         return actors.size
+    }
+
+    fun setActorsList(list : List<Actor>){
+        actors = list
+        notifyDataSetChanged()
     }
 
     override fun onBindViewHolder(holder: ActorViewHolder, position: Int) {
