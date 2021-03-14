@@ -1,3 +1,4 @@
+
 package com.havverton.cinemapp.adapters
 
 import android.view.LayoutInflater
@@ -6,10 +7,10 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.android.academy.fundamentals.homework.model.Actor
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.havverton.cinemapp.R
+import com.havverton.cinemapp.model.Actor
 
 class ActorsAdapter() : RecyclerView.Adapter<ActorViewHolder>() {
     var actors : List<Actor> = emptyList()
@@ -42,3 +43,4 @@ class ActorViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     val name: TextView = itemView.findViewById(R.id.actorName)
     val pic: ImageView = itemView.findViewById(R.id.actorPic)
 }
+

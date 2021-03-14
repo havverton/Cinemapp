@@ -5,15 +5,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.findViewTreeViewModelStoreOwner
 import androidx.recyclerview.widget.RecyclerView
-import com.android.academy.fundamentals.homework.model.Genre
-import com.android.academy.fundamentals.homework.model.Movie
 import com.bumptech.glide.Glide
-import com.havverton.cinemapp.DetailsViewModel
-import com.havverton.cinemapp.DetailsViewModelFactory
 import com.havverton.cinemapp.R
+import com.havverton.cinemapp.model.Genre
+import com.havverton.cinemapp.model.Movie
 
 class MovieListAdapter:RecyclerView.Adapter<MovieListAdapter.MovieListViewHolder>() {
     var filmList : List<Movie> = emptyList()
@@ -28,7 +24,7 @@ class MovieListAdapter:RecyclerView.Adapter<MovieListAdapter.MovieListViewHolder
         return vh
     }
 
-    fun setList(list: List<Movie>){
+    fun setMovieList(list: List<Movie>){
         filmList = list
         notifyDataSetChanged()
     }
@@ -45,10 +41,10 @@ class MovieListAdapter:RecyclerView.Adapter<MovieListAdapter.MovieListViewHolder
 
     private fun fillFields(holder: MovieListViewHolder, movie:Movie){
         holder.filmName.text = movie.title
-        holder.reviews.text = "${ movie.reviewCount} Reviews"
-        holder.ageRating.text = "${movie.pgAge}+"
-        holder.genre.text = fillGenres(movie.genres)
-        holder.duration.text = "${movie.runningTime} MINS"
+        holder.reviews.text = "${ movie.voteCount} Reviews"
+        holder.ageRating.text = "13"
+        holder.genre.text = movie.genres
+       // holder.duration.text = "${movie.runningTime} MINS"
 
         Glide
             .with(holder.itemView)
@@ -60,17 +56,6 @@ class MovieListAdapter:RecyclerView.Adapter<MovieListAdapter.MovieListViewHolder
         }
     }
 
-    private fun fillGenres(genres:List<Genre>):String{
-        var genreString = ""
-        val iterator = genres.iterator()
-        do {
-            genreString +=iterator.next().name
-            if(iterator.hasNext()) {
-                genreString += ", "
-            }
-        } while(iterator.hasNext())
-        return genreString
-    }
 
     class MovieListViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         val filmName:TextView = itemView.findViewById(R.id.filmName)
@@ -85,6 +70,7 @@ class MovieListAdapter:RecyclerView.Adapter<MovieListAdapter.MovieListViewHolder
     interface ItemSelectedListener{
         fun openMovieDetails(item:Movie)
     }
+
 
 }
 

@@ -1,13 +1,13 @@
 package com.havverton.cinemapp
 
 import android.os.Bundle
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import com.android.academy.fundamentals.homework.model.Movie
 import com.havverton.cinemapp.adapters.MovieListAdapter
 import com.havverton.cinemapp.fragments.FragmentMovieDetails
+//import com.havverton.cinemapp.fragments.FragmentMovieDetails
 import com.havverton.cinemapp.fragments.FragmentMoviesList
+import com.havverton.cinemapp.model.Movie
 
 class MainActivity : AppCompatActivity(), MovieListAdapter.ItemSelectedListener {
     var viewModel: DetailsViewModel? = null
@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity(), MovieListAdapter.ItemSelectedListener 
 
     override fun openMovieDetails(item: Movie) {
         viewModel?.selectMovie(item)
-        val moviesDetailFragment = FragmentMovieDetails()
+       val moviesDetailFragment = FragmentMovieDetails()
 
         supportFragmentManager.beginTransaction().apply {
             replace(R.id.main_frame, moviesDetailFragment, "OLOLO1")

@@ -1,3 +1,4 @@
+
 package com.havverton.cinemapp.fragments
 
 import android.os.Bundle
@@ -6,25 +7,30 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.content.res.AppCompatResources
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.android.academy.fundamentals.homework.model.Actor
-import com.android.academy.fundamentals.homework.model.Genre
-import com.android.academy.fundamentals.homework.model.Movie
 import com.bumptech.glide.Glide
 import com.havverton.cinemapp.DetailsViewModel
 import com.havverton.cinemapp.DetailsViewModelFactory
 import com.havverton.cinemapp.R
 import com.havverton.cinemapp.adapters.ActorsAdapter
+import com.havverton.cinemapp.model.Actor
+import com.havverton.cinemapp.model.Cast
+import com.havverton.cinemapp.model.Genre
+//import com.havverton.cinemapp.adapters.ActorsAdapter
+import com.havverton.cinemapp.model.Movie
+import kotlinx.coroutines.*
 
 
 class FragmentMovieDetails : Fragment() {
     var viewModel: DetailsViewModel? = null
     var recyclerView:RecyclerView? = null
     var adapter: ActorsAdapter? = null
+    var cast: List<Cast> = emptyList()
+    var actors: List<Actor> = emptyList()
 
 
     override fun onCreateView(
@@ -38,20 +44,46 @@ class FragmentMovieDetails : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-           fillDetails(viewModel!!.currentMovie.value!!,view)
+        fillDetails(viewModel!!.currentMovie.value!!, view)
+
 
 
         recyclerView = view.findViewById(R.id.rv_actors)
         adapter = ActorsAdapter()
-        if(viewModel?.currentMovie?.value!!.actors.isNotEmpty()){
-            adapter?.setActorsList(viewModel!!.currentMovie.value!!.actors)
-            recyclerView?.adapter = adapter
-            recyclerView?.layoutManager = LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
-        }else{
-            view.findViewById<TextView>(R.id.castLine).visibility = View.GONE
-            recyclerView?.visibility = View.GONE
+        val scope2 = CoroutineScope(Dispatchers.IO + Job())
+        val scope = CoroutineScope(Dispatchers.Main + Job())
+
+        val job4: Deferred<List<Actor>> = scope2.async {
+            var actors: MutableList<Actor> = mutableListOf()
+            cast = RetrofitModule.movieApi.getCast(viewModel?.currentMovie?.value!!.id).cast
+
+            cast.forEach {
+                val actor = Actor(
+                    name = it.name,
+                    imageUrl = "https://image.tmdb.org/t/p/" + "w300" + "${it.profilePath}",
+                    id = it.id.toInt()
+                )
+                actors.add(actor)
+            }
+            actors
         }
-    }
+
+        scope2.launch {
+            actors = job4.await()
+            scope.launch { if (actors.isNotEmpty()) {
+
+                adapter?.setActorsList(actors)
+                recyclerView?.adapter = adapter
+                recyclerView?.layoutManager =
+                    LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+                Toast.makeText(view.context,"Прошёл", Toast.LENGTH_SHORT).show()
+            } else {
+                view.findViewById<TextView>(R.id.castLine).visibility = View.GONE
+                recyclerView?.visibility = View.GONE
+            }
+            } }
+        }
+
 
     fun fillDetails(movie:Movie,view: View){
         val bg = view.findViewById<ImageView>(R.id.detailsBG)
@@ -62,26 +94,14 @@ class FragmentMovieDetails : Fragment() {
         val pgAge = view.findViewById<TextView>(R.id.detailsPgAge)
 
         title.text = movie.title
-        lore.text = movie.storyLine
-        genre.text = fillGenres(movie.genres)
-        reviews.text = "${movie.reviewCount} Reviews"
+        lore.text = movie.overview
+        genre.text = movie.genres
+        reviews.text = "${movie.voteCount} Reviews"
         pgAge.text = "${movie.pgAge}+"
 
         Glide.with(view.context)
-            .load(movie.detailImageUrl)
+            .load(movie.imageUrl)
             .into(bg)
     }
 
-    fun fillGenres(genres:List<Genre>):String{
-        var genreString = ""
-        val iterator = genres.iterator()
-        do {
-            genreString +=iterator.next().name
-            if(iterator.hasNext()) {
-                genreString += ", "
-            }
-        } while(iterator.hasNext())
-        return genreString
-    }
 }
-
