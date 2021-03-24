@@ -1,26 +1,32 @@
 package com.havverton.cinemapp.model
-import kotlinx.serialization.*
-import kotlinx.serialization.SerialName
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.Index
+import androidx.room.PrimaryKey
+import com.havverton.cinemapp.db.MovieListContract
 
 
-class Movie (
-
-
-    val pgAge: Int,
-
-    val genres: String,
-
-    val id: Long,
+@Entity(
+    tableName = MovieListContract.Movies.TABLE_NAME,
+    indices = [Index(MovieListContract.Movies.COLUMN_NAME_ID)]
+)
+data class Movie(
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = MovieListContract.Movies.COLUMN_NAME_ID)
+    val id:Long = 0,
+    @ColumnInfo(name = MovieListContract.Movies.COLUMN_NAME_TITLE)
     val title:String,
+    @ColumnInfo(name = MovieListContract.Movies.COLUMN_NAME_GENRES)
+    val genres:String,
+    @ColumnInfo(name = MovieListContract.Movies.COLUMN_NAME_AGE)
+    val pgAge: Int,
+    @ColumnInfo(name = MovieListContract.Movies.COLUMN_NAME_IMAGE_URL)
     val imageUrl: String,
+    @ColumnInfo(name = MovieListContract.Movies.COLUMN_NAME_OVERVIEW)
     val overview: String,
+    @ColumnInfo(name = MovieListContract.Movies.COLUMN_NAME_REVIEW_COUNT)
     val voteCount: Long,
-    val cast: List<Actor>,
+    @ColumnInfo(name = MovieListContract.Movies.COLUMN_NAME_IS_FAVORITE)
+    val isFavorite: Boolean
 
-){
-    fun getMovieId():Long{
-        return this.id
-    }
-}
-
-
+)

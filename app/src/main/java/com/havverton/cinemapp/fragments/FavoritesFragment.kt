@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.work.*
 import com.havverton.cinemapp.*
 import com.havverton.cinemapp.R
+import com.havverton.cinemapp.adapters.FavoritesListAdapter
 import com.havverton.cinemapp.adapters.MovieListAdapter
 import com.havverton.cinemapp.db.AppDatabase
 import com.havverton.cinemapp.model.GenrePage
@@ -33,12 +34,11 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import java.util.concurrent.TimeUnit
 
-class FragmentMoviesList : Fragment() {
+class FavoritesFragment : Fragment() {
     var selectItemListener: MovieListAdapter.ItemSelectedListener? = null
     var favoritesListener: FavoritesListener? = null
-    private var movieBlock: ImageView? = null
     private var recyclerView: RecyclerView? = null
-    private var adapter: MovieListAdapter? = null
+    private var adapter: FavoritesListAdapter? = null
     var viewModel: DetailsViewModel? = null
     var movies: List<Movie> = emptyList()
 
@@ -55,7 +55,7 @@ class FragmentMoviesList : Fragment() {
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        recyclerView = view.findViewById(R.id.rv_list)
+        recyclerView = view.findViewById(R.id.rv_favorites_list)
         val orientation = resources.configuration.orientation
         if(orientation == Configuration.ORIENTATION_PORTRAIT) {
             recyclerView?.layoutManager = GridLayoutManager(context, 2, RecyclerView.VERTICAL,false)
@@ -64,25 +64,17 @@ class FragmentMoviesList : Fragment() {
         }
 
 
-
         val scope = CoroutineScope(Dispatchers.IO)
-        val movieJob = scope.async {
-            val movies = MovieBuilderProvider.getMovieList()
-            movies
-        }
-
         scope.launch {
-
-            adapter = MovieListAdapter()
-            val dbMovies = readMoviesFromDB()
+            adapter = FavoritesListAdapter()
+            val dbMovies = getFavoritesFromDB()
             viewModel?.fillMovieList(dbMovies)
-            movies = movieJob.await()
-            viewModel?.fillMovieList(movies)
+
             withContext(Dispatchers.Main) {
                 viewModel?.movieList!!.observe(viewLifecycleOwner, {
                     if(it.isNotEmpty() ){
                         if(adapter == null){
-                            adapter = MovieListAdapter()
+                            adapter = FavoritesListAdapter()
                         }
                         adapter!!.setMovieList(it)
                         recyclerView?.adapter = adapter
@@ -90,11 +82,6 @@ class FragmentMoviesList : Fragment() {
 
                 })
             }
-        }
-
-        val favoritesBtn = view.findViewById<TextView>(R.id.favorites_button)
-        favoritesBtn.setOnClickListener{
-         favoritesListener?.openFavoritesMovies()
         }
 
     }
@@ -118,9 +105,9 @@ class FragmentMoviesList : Fragment() {
     }
 
 
-    fun readMoviesFromDB():List<Movie>{
+    fun getFavoritesFromDB():List<Movie>{
         val db = AppDatabase.create(requireContext().applicationContext)
-        val movies =  db.movieDao.getAll()
+        val movies =  db.movieDao.getAllFavorites()
         db.close()
         return movies
     }
@@ -128,31 +115,5 @@ class FragmentMoviesList : Fragment() {
     interface FavoritesListener{
         fun openFavoritesMovies()
     }
-}
-
-interface MovieApi {
-    @GET("configuration?api_key=${AppConfig.API_KEY}")
-    suspend fun getApi(): ImagesResponse
-
-    @GET("movie/popular?api_key=${AppConfig.API_KEY}&language=en-EN")
-    suspend fun getPopularMovieList(): MovieResponse
-
-    @GET("genre/movie/list?api_key=${AppConfig.API_KEY}&language=en-EN")
-    suspend fun getGenreList(): GenrePage
-
-    @GET("movie/{id}/credits?api_key=6e466b67854a32b973cf8e3f9dc31068&language=en-US")
-    suspend fun getCast(@Path("id") id: Long): JSONCredits
-
-}
-
-object RetrofitModule {
-    private val json = Json { ignoreUnknownKeys = true }
-
-    @Suppress("EXPERIMENTAL_API_USAGE")
-    private val retrofit: Retrofit = Retrofit.Builder()
-        .baseUrl(AppConfig.BASE_URL)
-        .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
-        .build()
-    val movieApi: MovieApi = retrofit.create()
 }
 

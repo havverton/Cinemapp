@@ -1,6 +1,18 @@
 package com.havverton.cinemapp.model
 import kotlinx.serialization.*
-import kotlinx.serialization.SerialName
+
+
+@Serializable
+data class MovieResponse (
+    val page: Long,
+    val results: List<JsonMovie>,
+
+    @SerialName("total_pages")
+    val totalPages: Long,
+
+    @SerialName("total_results")
+    val totalResults: Long
+)
 
 @Serializable
 data class JsonMovie (

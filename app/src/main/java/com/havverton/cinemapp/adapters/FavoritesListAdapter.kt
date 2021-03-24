@@ -8,9 +8,10 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.havverton.cinemapp.R
+import com.havverton.cinemapp.model.Genre
 import com.havverton.cinemapp.model.Movie
 
-class MovieListAdapter:RecyclerView.Adapter<MovieListAdapter.MovieListViewHolder>() {
+class FavoritesListAdapter:RecyclerView.Adapter<FavoritesListAdapter.MovieListViewHolder>() {
     var filmList : List<Movie> = emptyList()
 
     private var listener: ItemSelectedListener? = null
@@ -52,12 +53,11 @@ class MovieListAdapter:RecyclerView.Adapter<MovieListAdapter.MovieListViewHolder
             .load(movie.imageUrl)
             .into(holder.filmPoster)
 
-        holder.itemView.setOnClickListener{
+        holder.filmPoster.setOnClickListener{
             listener?.openMovieDetails(movie)
         }
-        holder.likeIcon.setOnClickListener{
-            listener?.addToFavorites(movie)
-        }
+
+
     }
 
 
@@ -68,14 +68,12 @@ class MovieListAdapter:RecyclerView.Adapter<MovieListAdapter.MovieListViewHolder
         val duration:TextView = itemView.findViewById(R.id.filmDuration)
         val filmPoster: ImageView = itemView.findViewById(R.id.filmPoster)
         val ageRating: TextView = itemView.findViewById(R.id.pgAge)
-        val likeIcon: ImageView = itemView.findViewById(R.id.likeIcon)
 
         }
 
 
     interface ItemSelectedListener{
         fun openMovieDetails(item:Movie)
-        fun addToFavorites(item: Movie)
     }
 
 

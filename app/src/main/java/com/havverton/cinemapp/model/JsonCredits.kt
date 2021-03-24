@@ -25,25 +25,17 @@ data class Cast (
     val adult: Boolean,
     val gender: Long,
     val id: Long,
-
     val name: String,
-
     @SerialName("original_name")
     val originalName: String,
-
     val popularity: Double,
-
     @SerialName("profile_path")
     val profilePath: String? = null,
-
     @SerialName("cast_id")
     val castID: Long? = null,
-
     val character: String? = null,
-
     @SerialName("credit_id")
     val creditID: String,
-
     val order: Long? = null,
     val department: String? = null,
     val job: String? = null

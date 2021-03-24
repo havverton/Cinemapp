@@ -1,4 +1,4 @@
-package com.havverton.cinemapp
+package com.havverton.cinemapp.model
 
 import android.graphics.drawable.Drawable
 import android.media.Image
