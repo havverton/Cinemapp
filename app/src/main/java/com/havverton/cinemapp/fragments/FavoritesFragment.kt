@@ -50,7 +50,7 @@ class FavoritesFragment : Fragment() {
         viewModel = ViewModelProvider(activity!!.viewModelStore, DetailsViewModelFactory()).get(
             DetailsViewModel::class.java
         )
-        return inflater.inflate(R.layout.fragment_movies_list, container, false)
+        return inflater.inflate(R.layout.fragment_favorites, container, false)
     }
 
 
@@ -62,26 +62,21 @@ class FavoritesFragment : Fragment() {
         }else{
             recyclerView?.layoutManager = GridLayoutManager(context, 1, RecyclerView.HORIZONTAL,false)
         }
+        viewModel?.favoritesList!!.observe(viewLifecycleOwner, {
+            if(it.isNotEmpty() ){
+                if(adapter == null){
+                    adapter = FavoritesListAdapter()
+                }
+                adapter!!.setMovieList(it)
+                recyclerView?.adapter = adapter
+            }
 
-
+        })
         val scope = CoroutineScope(Dispatchers.IO)
         scope.launch {
             adapter = FavoritesListAdapter()
             val dbMovies = getFavoritesFromDB()
-            viewModel?.fillMovieList(dbMovies)
-
-            withContext(Dispatchers.Main) {
-                viewModel?.movieList!!.observe(viewLifecycleOwner, {
-                    if(it.isNotEmpty() ){
-                        if(adapter == null){
-                            adapter = FavoritesListAdapter()
-                        }
-                        adapter!!.setMovieList(it)
-                        recyclerView?.adapter = adapter
-                    }
-
-                })
-            }
+            viewModel?.fillFavoritesList(dbMovies)
         }
 
     }
@@ -107,7 +102,7 @@ class FavoritesFragment : Fragment() {
 
     fun getFavoritesFromDB():List<Movie>{
         val db = AppDatabase.create(requireContext().applicationContext)
-        val movies =  db.movieDao.getAllFavorites()
+        val movies =  db.movieDao.getAllFavorites(true)
         db.close()
         return movies
     }

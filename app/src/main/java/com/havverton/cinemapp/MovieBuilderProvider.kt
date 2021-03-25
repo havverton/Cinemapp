@@ -9,16 +9,15 @@ import com.havverton.cinemapp.model.*
 import kotlinx.coroutines.*
 
 object MovieBuilderProvider {
-   /* suspend fun getMovieList(context: ViewModelStore): List<Movie> {
+    suspend fun getMovieList(): List<Movie> {
         var moviesList: MutableList<Movie> = mutableListOf()
-        val scope = CoroutineScope(Dispatchers.IO + Job())
         var movies: List<JsonMovie> = emptyList()
         var genres: List<Genre> = emptyList()
-
-        val loadMoviesJob = scope.launch {
+        var url:String = ""
+        try {
             movies = RetrofitModule.movieApi.getPopularMovieList().results
             genres = RetrofitModule.movieApi.getGenreList().genres
-            val url = RetrofitModule.movieApi.getApi().images.secureBaseURL
+            url = RetrofitModule.movieApi.getApi().images.secureBaseURL
             movies.forEach {
                 val goodMovie = Movie(
                     id = it.id,
@@ -29,43 +28,17 @@ object MovieBuilderProvider {
                         13
                     },
                     genres = fillGenres(it, genres),
-                    imageUrl = "${url}" + "w300" + "${it.posterPath}",
+                    imageUrl = "$url" + "w300" + "${it.posterPath}",
                     overview = it.overview,
                     voteCount = it.voteCount,
                     isFavorite = false
                 )
                 moviesList.add(goodMovie)
             }
+        }catch (e:Exception){
+            e.printStackTrace()
         }
-        loadMoviesJob.join()
-        return moviesList
 
-    }*/
-
-    suspend fun getMovieList(): List<Movie> {
-        var moviesList: MutableList<Movie> = mutableListOf()
-        var movies: List<JsonMovie> = emptyList()
-        var genres: List<Genre> = emptyList()
-                movies = RetrofitModule.movieApi.getPopularMovieList().results
-                genres = RetrofitModule.movieApi.getGenreList().genres
-                val url = RetrofitModule.movieApi.getApi().images.secureBaseURL
-                movies.forEach {
-                    val goodMovie = Movie(
-                        id = it.id,
-                        title = it.title,
-                        pgAge = if (it.adult) {
-                            18
-                        } else {
-                            13
-                        },
-                        genres = fillGenres(it, genres),
-                        imageUrl = "$url" + "w300" + "${it.posterPath}",
-                        overview = it.overview,
-                        voteCount = it.voteCount,
-                        isFavorite = false
-                    )
-                    moviesList.add(goodMovie)
-                }
         return moviesList
     }
 

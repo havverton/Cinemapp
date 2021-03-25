@@ -23,6 +23,6 @@ interface MovieListDao {
     @Update
     fun update(movie: Movie)
 
-    @Query("SELECT * FROM films_list WHERE isFavorite ")
-    fun getAllFavorites(): List<Movie>
+    @Query("SELECT * FROM films_list WHERE isFavorite = :isFavorite ")
+    fun getAllFavorites(isFavorite: Boolean): List<Movie>
 }

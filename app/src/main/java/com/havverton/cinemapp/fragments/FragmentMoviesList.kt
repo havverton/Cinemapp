@@ -1,37 +1,39 @@
 package com.havverton.cinemapp.fragments
 
 import android.content.Context
+import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
+import androidx.core.content.ContextCompat.startActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.work.*
 import com.havverton.cinemapp.*
-import com.havverton.cinemapp.R
 import com.havverton.cinemapp.adapters.MovieListAdapter
 import com.havverton.cinemapp.db.AppDatabase
-import com.havverton.cinemapp.model.GenrePage
-import com.havverton.cinemapp.model.JSONCredits
-import com.havverton.cinemapp.model.Movie
-import com.havverton.cinemapp.model.MovieResponse
-import com.havverton.cinemapp.work.RefreshCacheWork
+import com.havverton.cinemapp.model.*
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.coroutines.*
 import kotlinx.serialization.json.Json
+import okhttp3.Interceptor
 import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.create
 import retrofit2.http.GET
 import retrofit2.http.Path
-import java.util.concurrent.TimeUnit
+
+
 
 class FragmentMoviesList : Fragment() {
     var selectItemListener: MovieListAdapter.ItemSelectedListener? = null
@@ -50,51 +52,62 @@ class FragmentMoviesList : Fragment() {
         viewModel = ViewModelProvider(activity!!.viewModelStore, DetailsViewModelFactory()).get(
             DetailsViewModel::class.java
         )
+        retainInstance = true
         return inflater.inflate(R.layout.fragment_movies_list, container, false)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
     }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         recyclerView = view.findViewById(R.id.rv_list)
         val orientation = resources.configuration.orientation
-        if(orientation == Configuration.ORIENTATION_PORTRAIT) {
-            recyclerView?.layoutManager = GridLayoutManager(context, 2, RecyclerView.VERTICAL,false)
-        }else{
-            recyclerView?.layoutManager = GridLayoutManager(context, 1, RecyclerView.HORIZONTAL,false)
+        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+            recyclerView?.layoutManager =
+                GridLayoutManager(context, 2, RecyclerView.VERTICAL, false)
+        } else {
+            recyclerView?.layoutManager =
+                GridLayoutManager(context, 1, RecyclerView.HORIZONTAL, false)
         }
 
+        viewModel?.movieList!!.observe(viewLifecycleOwner, {
+            if (it.isNotEmpty()) {
+                if (adapter == null) {
+                    adapter = MovieListAdapter()
+                }
+                adapter!!.setMovieList(it)
+                recyclerView?.adapter = adapter
+            }
+
+        })
 
 
-        val scope = CoroutineScope(Dispatchers.IO)
-        val movieJob = scope.async {
-            val movies = MovieBuilderProvider.getMovieList()
-            movies
-        }
+        val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
         scope.launch {
-
             adapter = MovieListAdapter()
             val dbMovies = readMoviesFromDB()
             viewModel?.fillMovieList(dbMovies)
-            movies = movieJob.await()
-            viewModel?.fillMovieList(movies)
-            withContext(Dispatchers.Main) {
-                viewModel?.movieList!!.observe(viewLifecycleOwner, {
-                    if(it.isNotEmpty() ){
-                        if(adapter == null){
-                            adapter = MovieListAdapter()
-                        }
-                        adapter!!.setMovieList(it)
-                        recyclerView?.adapter = adapter
-                    }
-
-                })
+            movies = MovieBuilderProvider.getMovieList()
+            if (movies.size == 0) {
+                movies = dbMovies
+               withContext(Dispatchers.Main){ Toast.makeText(context, "Не удалось получить список фильмов", Toast.LENGTH_SHORT)
+                    .show()}
             }
+            if (dbMovies.size == 0) {
+                putMoviesToDB(movies)
+            } else {
+                updateMoviesToDB(movies)
+            }
+            viewModel?.fillMovieList(movies)
+
         }
 
         val favoritesBtn = view.findViewById<TextView>(R.id.favorites_button)
-        favoritesBtn.setOnClickListener{
-         favoritesListener?.openFavoritesMovies()
+        favoritesBtn.setOnClickListener {
+            favoritesListener?.openFavoritesMovies()
         }
 
     }
@@ -118,14 +131,26 @@ class FragmentMoviesList : Fragment() {
     }
 
 
-    fun readMoviesFromDB():List<Movie>{
+    fun readMoviesFromDB(): List<Movie> {
         val db = AppDatabase.create(requireContext().applicationContext)
-        val movies =  db.movieDao.getAll()
+        val movies = db.movieDao.getAll()
         db.close()
         return movies
     }
 
-    interface FavoritesListener{
+    fun putMoviesToDB(movies: List<Movie>) {
+        val db = AppDatabase.create(requireContext().applicationContext)
+        db.movieDao.insertAll(movies)
+        db.close()
+    }
+
+    fun updateMoviesToDB(movies: List<Movie>) {
+        val db = AppDatabase.create(requireContext().applicationContext)
+        db.movieDao.updateAll(movies)
+        db.close()
+    }
+
+    interface FavoritesListener {
         fun openFavoritesMovies()
     }
 }
@@ -147,12 +172,22 @@ interface MovieApi {
 
 object RetrofitModule {
     private val json = Json { ignoreUnknownKeys = true }
+    val loggingInterceptor = HttpLoggingInterceptor().apply {
+        level = HttpLoggingInterceptor.Level.BODY
+    }
+    val client = OkHttpClient().newBuilder()
+        .addInterceptor(loggingInterceptor)
+        .addNetworkInterceptor(loggingInterceptor)
+        .build()
+
 
     @Suppress("EXPERIMENTAL_API_USAGE")
     private val retrofit: Retrofit = Retrofit.Builder()
         .baseUrl(AppConfig.BASE_URL)
         .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
+        .client(client)
         .build()
     val movieApi: MovieApi = retrofit.create()
 }
+
 

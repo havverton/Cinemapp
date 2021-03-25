@@ -27,6 +27,7 @@ import java.util.concurrent.TimeUnit
 class MainActivity : AppCompatActivity(), MovieListAdapter.ItemSelectedListener, FragmentMoviesList.FavoritesListener {
     var viewModel: DetailsViewModel? = null
     var movieslistFragment: FragmentMoviesList? = null
+    var favoritesFragment: FavoritesFragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +42,7 @@ class MainActivity : AppCompatActivity(), MovieListAdapter.ItemSelectedListener,
         } else {
             movieslistFragment =
                 supportFragmentManager.findFragmentByTag("list_fragment") as? FragmentMoviesList
+         //   favoritesFragment = supportFragmentManager.findFragmentByTag("favorites_fragment") as? FavoritesFragment
         }
         viewModel =
             ViewModelProvider(this, DetailsViewModelFactory()).get(DetailsViewModel::class.java)
@@ -67,13 +69,14 @@ class MainActivity : AppCompatActivity(), MovieListAdapter.ItemSelectedListener,
         val favoriteFragment = FavoritesFragment()
 
         supportFragmentManager.beginTransaction().apply {
-            replace(R.id.main_frame, favoriteFragment, "favorites_fragment")
+            add(R.id.main_frame, favoriteFragment, "favorites_fragment")
             addToBackStack(null)
             commit()
         }
     }
     override fun addToFavorites(item:Movie){
         val db = AppDatabase.create(applicationContext)
+        item.isFavorite = true
         CoroutineScope(Dispatchers.IO).launch {
             db.movieDao.update(item)
         }

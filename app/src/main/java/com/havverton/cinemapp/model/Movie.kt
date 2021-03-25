@@ -27,6 +27,6 @@ data class Movie(
     @ColumnInfo(name = MovieListContract.Movies.COLUMN_NAME_REVIEW_COUNT)
     val voteCount: Long,
     @ColumnInfo(name = MovieListContract.Movies.COLUMN_NAME_IS_FAVORITE)
-    val isFavorite: Boolean
+    var isFavorite: Boolean
 
 )
